@@ -34,9 +34,17 @@ public class UserController {
 
     @PostMapping(value = "/update")
     public String updateUser(@RequestParam Long id, @RequestParam String name, @RequestParam String surname, @RequestParam String email) {
-        User user = new User(name, surname, email);
-        user.setId(id);
-        userService.update(user);
+        User existingUser = userService.findById(id);
+        if(existingUser != null){
+            // Если пользователь существует, обновляем его данные
+            existingUser.setName(name);
+            existingUser.setSurname(surname);
+            existingUser.setEmail(email);
+
+            userService.update(existingUser);
+
+            return "redirect:/";
+        }
         return "redirect:/";
     }
 
